@@ -31,3 +31,25 @@ Temperature and Humidity sensor for ESP8266 for DHT11 and AM2315, with neopixel 
  the tabs on the longer portion of the case into the box portion, locking the two together.
  
  The finished result can be seen above.
+ 
+ ## Use
+ The sensor started as a special purpose project to push data from multiple sensors around the house into
+ a dashboard application. 
+ 
+ When the device is first powered on, it creates a Wifi access point called "AutoConnectAP". Connect to that WiFi 
+ access point with your external device and you should be presented with the initial configuration page for the device.
+ Some of the settings are likely not suitable for your application and should be adjusted accordingly in the source code.
+ 
+ Once WiFi is configured, the device starts its internal HTTP processes and begins collecting and transmitting data.
+ The built-in web server handles several routes.
+ 
+ Given a host name like "outside_temp.local", the default route http://outside_temp.local/ will return a JSON
+ object containing temperature and humidity values.
+ 
+ Other routes include:
+ 
+  * GET /get - returns a JSON object containing the current configuration data
+  * POST /set - receives a JSON object containing configuration data to change within the sensor. See the example
+  CURL command in the source code
+  * GET /reset - forces the device to re-enter wifi configuration mode
+  * GET /push - forces the device to execute its data "push" functionality
