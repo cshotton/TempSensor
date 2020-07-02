@@ -53,3 +53,10 @@ Temperature and Humidity sensor for ESP8266 for DHT11 and AM2315, with neopixel 
   CURL command in the source code
   * GET /reset - forces the device to re-enter wifi configuration mode
   * GET /push - forces the device to execute its data "push" functionality
+  
+## Pics
+Here are a few more images of the internals:
+
+![Sensor Image](/images/1.png)
+![Sensor Image](/images/2.png)
+![Sensor Image](/images/3.png)
