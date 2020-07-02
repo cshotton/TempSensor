@@ -45,7 +45,7 @@ bool pushData = false;
 
 char station_name [40] = "inside";
 char update_freq [6] = "10";
-char hook_url[256] = "http://home.shotton.us:3000/pd/webhook";
+char hook_url[256] = "http://ha.local/pd/webhook";
 char hook_guid [64] = "weather_pd";
 char hook_report [32] = "temp_and_humidity";
 char cold_temp [4] =  "68";
@@ -211,7 +211,7 @@ void handleRoot () {
 }
 
 // sets the internal configuration field using the data supplied, JSON blob
-// curl -XPOST -i -H "Content-type: application/json" -d '{"station_name":"inside","update_freq":"10","hook_url":"http://home.shotton.us:3000/pd/webhook","hook_guid":"weather_pd","hook_report":"temp_and_humidity","gmt_offset":"-4", "night_start":"19", "night_end" : "7", "cold_temp":"68", "hot_temp":"78","light_color":"FFFFFF"}' 'http://inside_temp.local/set'
+// curl -XPOST -i -H "Content-type: application/json" -d '{"station_name":"inside","update_freq":"10","hook_url":"http://ha.local/pd/webhook","hook_guid":"weather_pd","hook_report":"temp_and_humidity","gmt_offset":"-4", "night_start":"19", "night_end" : "7", "cold_temp":"68", "hot_temp":"78","light_color":"FFFFFF"}' 'http://inside_temp.local/set'
 void handleSet () {
   //get the json payload
   String body = server.arg("plain");
@@ -372,7 +372,7 @@ void setup() {
     Serial.println("HTTP server started");
 
     // Add service to MDNS-SD
-    MDNS.addService("http", "tcp", 80);
+    MDNS.addService("temperature", "tcp", 80);
   }
 
   timeSetup ();
@@ -394,6 +394,13 @@ void SendSensorData () {
   int h = round (getHumidity ());
   float tf = getTemperatureF();
   float tc = getTemperatureC();
+
+  /*******
+   * This section of code is dedicated to pushing data to a remote aggregator on a periodic basis. I use a platform called "Rebar" that is my company's low-code/no-code
+   * platform for app development (see www.concluent.com)
+   * 
+   * This could be replaced with code to send a payload to IFTTT or ThingsBoard or MQTT or whatever you want.
+   */
 
   pushData = false;
   
