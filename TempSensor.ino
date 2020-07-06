@@ -28,8 +28,8 @@
 //DHT11 is assumed to be on GPIO4/D2. Change the pin number in sensors.h as necessary.
 //AM2315 uses I2C
 
-//#define SENSOR_DHT11 1
-#define SENSOR_AM2315 1
+#define SENSOR_DHT11 1
+//#define SENSOR_AM2315 1
 
 #include "times.h"
 #include "sensors.h"
@@ -205,9 +205,10 @@ void handleRoot () {
   String c = String (buff);
 
   String json = String ("{\"temperature\":\"") + f + "\",\"temperature_c\":\"" + c +"\",\"humidity\":\"" + h + "\",\"station\":\"" + station_name + "\"}";
-                          
+
+  server.sendHeader ("Access-Control-Allow-Origin", "*");
   server.send (200, "application/json", json);
-  Serial.print (station_name);
+  Serial.println (station_name);
 }
 
 // sets the internal configuration field using the data supplied, JSON blob
@@ -220,17 +221,20 @@ void handleSet () {
   _SaveConfigFile (body);
   //reload it from the config file to update settings
   LoadConfig();
+  server.sendHeader ("Access-Control-Allow-Origin", "*");
   server.send (200, "application/json", "{\"status\": \"OK\"}");
 }
 
 // gets the internal configuration field as a JSON blob
 void handleGet () {
   Serial.println ("Handled /get");
+  server.sendHeader ("Access-Control-Allow-Origin", "*");
   server.send (200, "application/json", GetConfigFile ());
 }
 
 // causes the node to reset its persistent storage and reset to defaults
 void handleReset () {
+  server.sendHeader ("Access-Control-Allow-Origin", "*");
   server.send (200, "text/plain", "Reset initated.");
   Serial.print (station_name);
   Serial.println (" handled request for /reset");
@@ -239,6 +243,7 @@ void handleReset () {
 
 // forces the node to push its data to the webhook
 void handlePush () {
+  server.sendHeader ("Access-Control-Allow-Origin", "*");
   server.send (200, "text/plain", "Data pushed.");
   Serial.print (station_name);
   Serial.println (" handled request for /push");
